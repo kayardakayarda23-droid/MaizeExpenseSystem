@@ -1,17 +1,13 @@
 {
-  "name": "server",
+  "name": "maize-expense-system",
   "version": "1.0.0",
-  "description": "Backend for Maize Farming Expense Tracking System",
-  "main": "server.js",
+  "main": "server/server.js",
   "scripts": {
-    "server": "nodemon server.js",
-    "start": "node server.js"
+    "start": "node server/server.js"
   },
-  "keywords": [],
-  "author": "Zainab Suleiman",
-  "license": "ISC",
   "dependencies": {
     "bcryptjs": "^3.0.3",
+    "chart.js": "^4.5.1",
     "cors": "^2.8.5",
     "crypto": "^1.0.1",
     "dotenv": "^17.0.0",
@@ -20,7 +16,8 @@
     "jsonwebtoken": "^9.0.2",
     "multer": "^2.2.0",
     "mysql2": "^3.14.1",
-    "nodemailer": "^9.0.3"
+    "nodemailer": "^9.0.3",
+    "react-chartjs-2": "^5.3.1"
   },
   "devDependencies": {
     "nodemon": "^3.1.10"
