@@ -19,52 +19,84 @@ const protect = require("./middleware/authMiddleware");
 
 const app = express();
 
-// ============================
-// Middleware
-// ============================
+/* =====================================
+   Middleware
+===================================== */
+
 app.use(cors());
+
 app.use(express.json());
 
-// Serve uploaded images
+app.use(express.urlencoded({ extended: true }));
+
+// Serve uploaded files
 app.use(
     "/uploads",
-    express.static(path.join(__dirname, "uploads"))
+    express.static(
+        path.join(__dirname, "uploads")
+    )
 );
 
-// ============================
-// Home Route
-// ============================
-app.get("/", (req, res) => {
-    res.json({
+/* =====================================
+   Health Check Route
+===================================== */
+
+app.get("/health", (req, res) => {
+    res.status(200).json({
         success: true,
-        message: "Maize Farming Expense Tracking API is Running..."
+        message: "Server is healthy"
     });
 });
 
-// ============================
-// API Routes
-// ============================
+/* =====================================
+   Home Route
+===================================== */
+
+app.get("/", (req, res) => {
+    res.status(200).json({
+        success: true,
+        message:
+            "Maize Farming Expense Tracking API is Running..."
+    });
+});
+
+/* =====================================
+   API Routes
+===================================== */
+
 app.use("/api/auth", authRoutes);
+
 app.use("/api/expenses", expenseRoutes);
+
 app.use("/api/dashboard", dashboardRoutes);
+
 app.use("/api/statistics", statisticsRoutes);
+
 app.use("/api/profile", profileRoutes);
+
 app.use("/api/reports", reportRoutes);
 
-// ============================
-// Protected Test Route
-// ============================
-app.get("/api/test", protect, (req, res) => {
-    res.json({
-        success: true,
-        message: "Protected route accessed successfully!",
-        user: req.user
-    });
-});
+/* =====================================
+   Protected Test Route
+===================================== */
 
-// ============================
-// 404 Route
-// ============================
+app.get(
+    "/api/test",
+    protect,
+    (req, res) => {
+        res.json({
+            success: true,
+            message:
+                "Protected route accessed successfully!",
+            user: req.user
+        });
+    }
+);
+
+/* =====================================
+   404 Handler
+===================================== */
+
 app.use((req, res) => {
     res.status(404).json({
         success: false,
@@ -72,14 +104,52 @@ app.use((req, res) => {
     });
 });
 
-// ============================
-// Start Server
-// ============================
-const PORT = process.env.PORT || 8080;
+/* =====================================
+   Global Error Handlers
+===================================== */
 
-app.listen(PORT, "0.0.0.0", () => {
-    console.log("======================================");
-    console.log(`Server running on port ${PORT}`);
-    console.log("Maize Farming Expense API is live");
-    console.log("======================================");
-});
+process.on(
+    "uncaughtException",
+    (err) => {
+        console.error(
+            "UNCAUGHT EXCEPTION:"
+        );
+        console.error(err);
+    }
+);
+
+process.on(
+    "unhandledRejection",
+    (err) => {
+        console.error(
+            "UNHANDLED REJECTION:"
+        );
+        console.error(err);
+    }
+);
+
+/* =====================================
+   Start Server
+===================================== */
+
+const PORT =
+    process.env.PORT || 8080;
+
+app.listen(
+    PORT,
+    "0.0.0.0",
+    () => {
+        console.log(
+            "======================================"
+        );
+        console.log(
+            `Server running on port ${PORT}`
+        );
+        console.log(
+            "Maize Farming Expense API is live"
+        );
+        console.log(
+            "======================================"
+        );
+    }
+);
