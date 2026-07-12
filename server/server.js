@@ -19,137 +19,77 @@ const protect = require("./middleware/authMiddleware");
 
 const app = express();
 
-/* =====================================
-   Middleware
-===================================== */
-
+// =====================================
+// Middleware
+// =====================================
 app.use(cors());
-
 app.use(express.json());
-
 app.use(express.urlencoded({ extended: true }));
 
-// Serve uploaded files
+// =====================================
+// Serve Uploaded Files
+// =====================================
 app.use(
-    "/uploads",
-    express.static(
-        path.join(__dirname, "uploads")
-    )
+  "/uploads",
+  express.static(path.join(__dirname, "uploads"))
 );
 
-/* =====================================
-   Health Check Route
-===================================== */
+// =====================================
+// Health Check Route
+// =====================================
+app.get("/", (req, res) => {
+  res.status(200).json({
+    success: true,
+    message: "Maize Farming Expense Tracking API is Running..."
+  });
+});
 
 app.get("/health", (req, res) => {
-    res.status(200).json({
-        success: true,
-        message: "Server is healthy"
-    });
+  res.status(200).json({
+    status: "OK",
+    message: "Server is healthy"
+  });
 });
 
-/* =====================================
-   Home Route
-===================================== */
-
-app.get("/", (req, res) => {
-    res.status(200).json({
-        success: true,
-        message:
-            "Maize Farming Expense Tracking API is Running..."
-    });
-});
-
-/* =====================================
-   API Routes
-===================================== */
-
+// =====================================
+// API Routes
+// =====================================
 app.use("/api/auth", authRoutes);
-
 app.use("/api/expenses", expenseRoutes);
-
 app.use("/api/dashboard", dashboardRoutes);
-
 app.use("/api/statistics", statisticsRoutes);
-
 app.use("/api/profile", profileRoutes);
-
 app.use("/api/reports", reportRoutes);
 
-/* =====================================
-   Protected Test Route
-===================================== */
-
-app.get(
-    "/api/test",
-    protect,
-    (req, res) => {
-        res.json({
-            success: true,
-            message:
-                "Protected route accessed successfully!",
-            user: req.user
-        });
-    }
-);
-
-/* =====================================
-   404 Handler
-===================================== */
-
-app.use((req, res) => {
-    res.status(404).json({
-        success: false,
-        message: "Route not found"
-    });
+// =====================================
+// Protected Test Route
+// =====================================
+app.get("/api/test", protect, (req, res) => {
+  res.json({
+    success: true,
+    message: "Protected route accessed successfully!",
+    user: req.user
+  });
 });
 
-/* =====================================
-   Global Error Handlers
-===================================== */
+// =====================================
+// 404 Route
+// =====================================
+app.use((req, res) => {
+  res.status(404).json({
+    success: false,
+    message: "Route not found"
+  });
+});
 
-process.on(
-    "uncaughtException",
-    (err) => {
-        console.error(
-            "UNCAUGHT EXCEPTION:"
-        );
-        console.error(err);
-    }
-);
+// =====================================
+// Start Server
+// =====================================
+const PORT = process.env.PORT || 8080;
 
-process.on(
-    "unhandledRejection",
-    (err) => {
-        console.error(
-            "UNHANDLED REJECTION:"
-        );
-        console.error(err);
-    }
-);
-
-/* =====================================
-   Start Server
-===================================== */
-
-const PORT =
-    process.env.PORT || 8080;
-
-app.listen(
-    PORT,
-    "0.0.0.0",
-    () => {
-        console.log(
-            "======================================"
-        );
-        console.log(
-            `Server running on port ${PORT}`
-        );
-        console.log(
-            "Maize Farming Expense API is live"
-        );
-        console.log(
-            "======================================"
-        );
-    }
-);
+app.listen(PORT, "0.0.0.0", () => {
+  console.log("======================================");
+  console.log(`Server running on port ${PORT}`);
+  console.log("Maize Farming Expense API is live");
+  console.log("======================================");
+});
