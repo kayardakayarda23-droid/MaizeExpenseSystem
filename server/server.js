@@ -85,11 +85,19 @@ app.use((req, res) => {
 // =====================================
 // Start Server
 // =====================================
+process.on("uncaughtException", (err) => {
+    console.error("UNCAUGHT EXCEPTION:", err);
+});
+
+process.on("unhandledRejection", (err) => {
+    console.error("UNHANDLED REJECTION:", err);
+});
+
 const PORT = process.env.PORT || 8080;
 
 app.listen(PORT, "0.0.0.0", () => {
-  console.log("======================================");
-  console.log(`Server running on port ${PORT}`);
-  console.log("Maize Farming Expense API is live");
-  console.log("======================================");
+    console.log("======================================");
+    console.log(`Server running on port ${PORT}`);
+    console.log("Maize Farming Expense API is live");
+    console.log("======================================");
 });
