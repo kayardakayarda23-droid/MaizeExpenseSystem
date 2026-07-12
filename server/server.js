@@ -19,6 +19,11 @@ const protect = require("./middleware/authMiddleware");
 
 const app = express();
 
+app.use((req, res, next) => {
+    console.log(`REQUEST: ${req.method} ${req.url}`);
+    next();
+});
+
 // =====================================
 // Middleware
 // =====================================
